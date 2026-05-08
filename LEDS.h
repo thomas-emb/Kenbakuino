@@ -1,22 +1,18 @@
 #ifndef leds_h
 #define leds_h
+
+#include <Arduino.h>
  
-// control the 12 LEDs via a 74HC595 and direct control
+// Abstract interface for controlling the 12 front-panel LEDs.
 
 class LEDs
 {
 public:
-  void Init();
-  void Display(byte Data, byte Control);
+  virtual ~LEDs() {}
 
-private:
-  void ShiftOut(byte LEDs);
-
-  static byte m_pDirectControlPins[];
-  byte m_LastData;
-  byte m_LastControl;
+  virtual void Init() = 0;
+  virtual void Display(byte Data, byte Control) = 0;
 };
 
-extern LEDs leds;
+extern LEDs& leds;
 #endif
-

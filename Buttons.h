@@ -1,10 +1,10 @@
 #ifndef buttons_h
 #define buttons_h
 
+#include <Arduino.h>
 
 // buttons/switches
-// Interacts with the 15 (8 data, 7 control) push-buttons via
-// daisy-chained 74HC165's
+// Abstract interface for reading the 15 (8 data, 7 control) push-buttons.
 class Buttons
 {
 public:
@@ -29,22 +29,13 @@ public:
     eUnused
   };
 
-  void Init();
+  virtual ~Buttons() {}
 
-  bool GetButtons(word& State, word& NewPressed, bool deBounce);
-  bool IsPressed(word BtnState, int Btn);
-  bool GetButtonDown(word BtnState, int& Btn);
-
-private:
-  word ShiftIn(int LatchPin, int DataPin, int ClockPin, int BitOrder);
-  static byte m_pMap[];
-  word m_wPrevState;
-  
-  word m_wPrevReading;
-  unsigned long m_iTransitionTimeMS;
+  virtual void Init() = 0;
+  virtual bool GetButtons(word& State, word& NewPressed, bool deBounce) = 0;
+  virtual bool IsPressed(word BtnState, int Btn) = 0;
+  virtual bool GetButtonDown(word BtnState, int& Btn) = 0;
 };
 
-extern Buttons buttons;
+extern Buttons& buttons;
 #endif
-
-

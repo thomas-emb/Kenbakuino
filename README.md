@@ -49,6 +49,9 @@ Turn RUN LED off when HALT encountered or STOP pressed (see MCP_LEGACY_RUN_LED).
 **May '25** 
 Corrected 74HC595 connections to LEDs (Q0==LED7) in Pins.h schematic. No code change.
 
+**May '26**
+[thomas-emb](https://github.com/thomas-emb) Added (WIP) option to use 2x(6+8) matrix insterad of shift registers.
+
 Schematic (taken from PINS.H)
 ````
 #ifndef pins_h

@@ -1,11 +1,15 @@
 #ifndef pins_h
 #define pins_h
+
+// 1 = matrix front panel, 0 = shift-register front panel.
+#define USE_MATRIX_FRONT_PANEL 1
  
 // Pin assignments
 // DS1307 - RTC (wire library)
 #define PIN_RTC_SDA	A4
 #define PIN_RTC_SCL	A5
 
+// Shift-register front-panel pins (74HC595 and 74HC165 x2)
 // 74HC595 - LED driver
 #define PIN_LEDS_DS	8
 #define PIN_LEDS_ST	9
@@ -97,5 +101,68 @@ SWx:
 This reflects the order I wired my switches to '165 pins.  
 You are free to change this to match the physical arrangement of the buttons, 
 BUT you will need to also change Buttons::m_pMap[] to match.
+*********************************************************/
+
+
+// Front-panel matrix shared lines
+// The matrix front panel is split into two banks.
+// The select lines enable one bank at a time via external transistor drivers.
+// When a bank is selected:
+//   - the 8 button input lines read the switch states for that bank
+//   - the 6 LED output lines drive the LEDs for that bank
+// Bank 0 is used for the 8 data-entry buttons and the lower 6 data LEDs.
+// Bank 1 is used for the 7 control buttons plus one spare input,
+// and for the upper 2 data LEDs plus the 4 control LEDs.
+#define PIN_PANEL_SEL0	12
+#define PIN_PANEL_SEL1	13
+
+// 6 shared LED output lines (driven into selected bank)
+#define PIN_LED_0	8
+#define PIN_LED_1	9
+#define PIN_LED_2	10
+#define PIN_LED_3	11
+#define PIN_LED_4	A2
+#define PIN_LED_5	A3
+
+// 8 shared switch input lines (read from selected bank)
+#define PIN_BTN_0	2
+#define PIN_BTN_1	3
+#define PIN_BTN_2	4
+#define PIN_BTN_3	5
+#define PIN_BTN_4	6
+#define PIN_BTN_5	7
+#define PIN_BTN_6	A0
+#define PIN_BTN_7	A1
+
+/*********************************************************
+This build uses a two-bank front-panel matrix:
+  - Two select lines drive panel-bank selection via transistor drivers.
+  - 8 input lines read switches from the selected bank.
+  - 6 output lines drive LEDs on the selected bank.
+
+
+               +-------------------------+---------------+
+               | +-----------+     BANK0 |         BANK1 |
+               | |    328    |           |               |
+  <USB>--[+5V]-+-+Vcc      13+-----------|-------------|<  NPN
+  <USB>--[+5V]---+AVcc     12+---------|<  NPN           |
+  <USB>--[GND]---+Gnd(22)    |           |               |
+  <USB>--[GND]---+Gnd(8)    8+----<LED0 "Bit0">---<LED6 "Bit6">
+  <USB>---[TX]---+TX        9+----<LED1 "Bit1">---<LED7 "Bit7">
+  <USB>---[RX]---+RX       10+----<LED2 "Bit2">---<LED8 "ADDR">
+                 |         11+----<LED3 "Bit3">---<LED9 "MEM">
+      [XTAL1]----+XT1      A2+----<LED4 "Bit4">---<LED10 "INP">
+      [XTAL2]----+XT2      A3+----<LED5 "Bit5">---<LED11 "RUN">
+                 |           |           |               |
++------+         |          2+----<SW0 "Bit0">----<SW8 "STOP">
+| RTC  |         |          3+----<SW1 "Bit1">----<SW9 "STRT">
+|   SDA+---------+A4        4+----<SW2 "Bit6">----<SW10 "CLR">
+|   SCL+---------+A5        5+----<SW3 "Bit7">----<SW11 "DISP">
+|   Vcc+-[+5V]   |          6+----<SW4 "Bit4">----<SW12 "SET">
+|   Gnd+-[GND]   |          7+----<SW5 "Bit5">----<SW13 "READ">
++------+         |         A0+----<SW6 "Bit2">----<SW14 "STOR">
+                 |         A1+----<SW7 "Bit3">----<SW15 "UNUSED">
+                 |           |
+                 +-----------+
 *********************************************************/
 #endif
